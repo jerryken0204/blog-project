@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-mongoose.connect('mongodb://localhost:7000/test', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/blog', {useMongoClient: true});
 
 const userSchema = new Schema({
     email: {
@@ -54,4 +54,4 @@ const userSchema = new Schema({
       }
 })
 
-module.exports = mongoose.model('user',userSchema);
+module.exports = mongoose.model('User',userSchema);

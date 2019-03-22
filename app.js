@@ -14,6 +14,16 @@ app.use(bodyParser.json());
 
 app.use(router);
 
+app.use((req,res)=>{
+    res.send('404 page');
+})
+
+// app.use((err,req,res,next)=>{
+//     res.status(500).json({
+//         err_code:500,
+//         message:err.message
+//     })
+// })
 app.listen(7000,()=>{
     console.log('server is starting...');
 })
