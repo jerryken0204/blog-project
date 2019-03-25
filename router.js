@@ -4,7 +4,9 @@ const User = require('./models/user');
 var md5 = require('md5');
 
 router.get('/',(req,res)=>{
-    res.render('index.html');
+    res.render('index.html',{
+        user:req.session.user
+    })
 })
 
 router.get('/login',(req,res)=>{
@@ -16,7 +18,8 @@ router.get('/register',(req,res)=>{
 })
 
 router.get('/logout',(req,res)=>{
-    
+    req.session.user = null;
+    res.redirect('/');
 })
 
 router.post('/login',(req,res,next)=>{
@@ -27,6 +30,7 @@ router.post('/login',(req,res,next)=>{
             return next(err);
         }
         if(user!=null){
+            req.session.user = user;
             res.status(200).json({
                 err_code:0,
                 message:'login successfully.'
@@ -42,7 +46,6 @@ router.post('/login',(req,res,next)=>{
 
 router.post('/register',(req,res,next)=>{
     var body = req.body;
-    console.log(body);
     User.findOne({email:body.email},(err,user)=>{
         if(err){
              return next(err);
@@ -53,10 +56,12 @@ router.post('/register',(req,res,next)=>{
                 message:'already registered.'
             })
         }else{
+            body.password = md5(md5(body.password));
             new User(body).save((err,user)=>{
                 if(err){
                     return next(err);
                 }
+                req.session.user = body;
                 res.status(200).json({
                     err_code:0,
                     message:'register successfully.'
